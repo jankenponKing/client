@@ -1,18 +1,25 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <input v-model="player">
+    <br>
+    <button @click="createRoom">create game</button>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
-import HelloWorld from '@/components/HelloWorld.vue'
 
 export default {
   name: 'home',
-  components: {
-    HelloWorld
+  data: function () {
+    return {
+      player: ''
+    }
+  },
+  methods: {
+    createRoom () {
+      this.$store.dispatch('createRoom', this.player)
+    }
   }
 }
 </script>
