@@ -9,29 +9,35 @@
         ></b-form-select>
       </b-form-group>
       <button @click.prevent="addOption">submit</button>
+      <div>
+        <img v-if="this.form.option === 'Rock'" src="@/assets/Rock.gif"/>
+        <img v-if="this.form.option === 'Scissor'" src="@/assets/Scissor.gif"/>
+        <img v-if="this.form.option === 'Paper'" src="@/assets/Paper.gif"/>
+      </div>
   </div>
 </template>
 
 <script>
 export default {
   name: 'Game',
-  data() {
-      return {
-        form: {
-          option: ''
-        },
-        cards: [{ text: 'Select One', value: null }, 'Rock', 'Scissor', 'Paper'],
-        show: true
-      }
-    },
-    methods: {
-      addOption() {
-        this.$store.dispatch('updatePosition', {room: this.$route.params.room, option: this.form.option})
+  data () {
+    return {
+      form: {
+        option: '',
+        test: 'Rock.gif'
       },
-    },
-    mounted: function() {
-      this.$store.dispatch('fetchData', this.$route.params.room)
+      cards: [{ text: 'Select One', value: null }, 'Rock', 'Scissor', 'Paper'],
+      show: true
     }
+  },
+  methods: {
+    addOption () {
+      this.$store.dispatch('updatePosition', { room: this.$route.params.room, option: this.form.option })
+    }
+  },
+  mounted: function () {
+    this.$store.dispatch('fetchData', this.$route.params.room)
+  }
 }
 </script>
 
