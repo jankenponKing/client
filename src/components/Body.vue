@@ -2,21 +2,21 @@
   <div class="home mt-4">
       <!-- image -->
       <div class="container-keyboard">
-        <img src="../assets/orange.jpg" class="keyboard-img margin-right: 100px; mb-4; " >
+        <img src="../assets/hands.gif" class="keyboard-img margin-right: 100px; " >
       </div>
       <!-- image -->
       <!-- daring message  -->
 
-      <p class="detiled-text1"> Are you the fastest in conquering this set of typing race? </p>
-      <p class="detiled-text2"> *psst you will be our master </p>
+      <p class="detiled-text1" style="font-weight: bolder;">JANKENPON</p>
+      <!-- <p class="detiled-text2"> *psst you will be our master </p> -->
 
       <!-- daring message  -->
       <!-- input form  -->
       <div class="container">
         <form @submit.prevent="createRoom()">
-            <b-form-input v-model="username" placeholder="Enter your name"></b-form-input>
+            <b-form-input class="text-center" v-model="username" placeholder="Enter your name"></b-form-input>
             <div>
-              <b-button class="play-btn px-3 py-2 mt-3 btn-lg" type="submit" pill>PLAY !</b-button>
+              <b-button class="play-btn px-3 py-2 mt-3 btn-lg" type="submit" pill>Go !</b-button>
             </div>
         </form>
       </div>
