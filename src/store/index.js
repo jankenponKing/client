@@ -2,21 +2,22 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import router from '../router'
 import db from '../config/firebase'
-import texts from '../assets/english'
+// import texts from '../assets/english'
 import Swal from 'sweetalert2'
+// import { log } from 'util'
 // const firebase = require('firebase/app')
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    listRoom: [],
     objectData: {},
     username: '',
-    wpm: 0,
-    position: 0,
     linkroom: '',
     countPlayer: 0,
-    master: false
+    master: false,
+    player2: ''
   },
   mutations: {
     ADD_DATA (state, payload) {
@@ -39,11 +40,24 @@ export default new Vuex.Store({
     }
   },
   actions: {
+    readRoom ({ commit }) {
+      db.collection('room').get().then(function (querySnapshot) {
+        querySnapshot.forEach(function (doc) {
+          // doc.data() is never undefined for query doc snapshots
+          // console.log(doc.id, " => ", doc.data())
+          if (doc.data().count < 2) {
+            // console.log('masuk');
+            router.push(`/about/${doc.id}`)
+          }
+        })
+      })
+    },
     create ({ commit, state }, payload) {
-      const index = Math.round(Math.random() * texts.length)
+      console.log(payload)
+      // const index = Math.round(Math.random() * texts.length)
       Swal.fire({
-        imageUrl: 'https://static-steelkiwi-dev.s3.amazonaws.com/media/filer_public/4e/07/4e07eece-7c84-46e2-944d-1a6b856d7b5f/463ff844-6f36-4ffe-b051-fea983d39223.gif',
-        text: 'Creating your room...',
+        imageUrl: '',
+        text: 'Create Room',
         imageWidth: 200,
         imageHeight: 200,
         showConfirmButton: false
@@ -53,9 +67,10 @@ export default new Vuex.Store({
           count: 1,
           player1: {
             username: payload,
-            option: ''
+            option: '',
+            master: true
           },
-          text: texts[index].text,
+          // text: texts[index].text,
           playStatus: false
         }
       )
@@ -86,7 +101,8 @@ export default new Vuex.Store({
       db.collection('room').doc(`${payload.room}`).update({
         [`player${countPlayer}`]: {
           username: payload.newuser,
-          option: ''
+          option: '',
+          master: false
         },
         count: state.objectData.count + 1
       })

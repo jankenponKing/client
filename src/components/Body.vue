@@ -11,16 +11,20 @@
       <!-- <p class="detiled-text2"> *psst you will be our master </p> -->
 
       <!-- daring message  -->
+      <b-button class="play-btn px-3 py-2 mt-3 btn-lg" type="submit" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">CREATE ROOM</b-button>
       <!-- input form  -->
       <div class="container">
-        <form @submit.prevent="createRoom()">
-            <b-form-input class="text-center" v-model="username" placeholder="Enter your name"></b-form-input>
-            <div>
+        <div class="collapse" id="collapseExample">
+          <div class="card card-body">
+            <form @submit.prevent="createRoom()">
+              <b-form-input class="text-center" v-model="username" placeholder="Enter your name"></b-form-input>
               <b-button class="play-btn px-3 py-2 mt-3 btn-lg" type="submit" pill>Go !</b-button>
-            </div>
-        </form>
+            </form>
+          </div>
+        </div>
       </div>
       <!-- input form  -->
+      <b-button @click="joinRoom" class="play-btn px-3 py-2 mt-3 btn-lg" type="submit">JOIN RANDOM ROOM</b-button>
   </div>
 </template>
 
@@ -33,9 +37,15 @@ export default {
     }
   },
   methods: {
+    joinRoom () {
+      this.$store.dispatch('readRoom')
+    },
     createRoom () {
-      console.log('roomCreated', this.username)
-      this.$store.dispatch('create', this.username)
+      if (this.username) {
+        console.log('roomCreated', this.username)
+        this.$store.dispatch('create', this.username)
+      } else {
+      }
     }
   },
   created () {
