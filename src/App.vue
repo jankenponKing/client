@@ -1,9 +1,6 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">
-          <p class="game-title text-white" style="font-family: 'Abril Fatface', cursive; font-size: 90px; letter-spacing: 10px; text-decoration: none; "><strong>pacepetcepet</strong></p>
-      </router-link>
     </div>
     <router-view/>
   </div>
@@ -38,7 +35,7 @@ body, html {
 
 #app {
   /* background-image: url('./assets/orange.jpg'); */
-  background-color: #febf6f;
+  background-color: #F6D4B9;
   background-repeat: no-repeat;
   /* background-size: cover; */
   object-fit: contain;
