@@ -54,7 +54,7 @@ export default new Vuex.Store({
           player1: {
             username: payload,
             option: ''
-          },
+          }
         }
       )
         .then((docRef) => {
@@ -71,8 +71,8 @@ export default new Vuex.Store({
           console.error('Error adding document: ', error)
         })
     },
-    fetchUser({commit, state}, payload) {
-     alert( payload)
+    fetchUser ({ commit, state }, payload) {
+      alert(payload)
       commit('CHANGE_ROOM', payload)
       db.collection('room').doc(`${payload}`)
         .onSnapshot(function (doc) {
@@ -88,22 +88,21 @@ export default new Vuex.Store({
           console.log(doc.data())
           if (doc.data().player1.option && doc.data().player2.option) {
             let winner = ''
-            if (doc.data().player1.option == 'scissor' && doc.data().player2.option == 'paper') winner = doc.data().player1.username 
-            else if (doc.data().player1.option == 'paper' && doc.data().player2.option == 'rock') winner = doc.data().player1.username 
-            else if (doc.data().player1.option == 'rock' && doc.data().player2.option == 'scissor') winner = doc.data().player1.username 
+            if (doc.data().player1.option == 'scissor' && doc.data().player2.option == 'paper') winner = doc.data().player1.username
+            else if (doc.data().player1.option == 'paper' && doc.data().player2.option == 'rock') winner = doc.data().player1.username
+            else if (doc.data().player1.option == 'rock' && doc.data().player2.option == 'scissor') winner = doc.data().player1.username
             else if (doc.data().player1.option == doc.data().player2.option) winner = 'Draw'
-            else winner = doc.data().player2.username 
+            else winner = doc.data().player2.username
             db.collection('room').doc(`${payload}`).update({ winner })
-            .then(doc => {
-              winner = winner.toUpperCase()
-              Swal.fire(`The Winner is ${winner}`)
-            })
-            .catch(err => {
-              console.log(err)
-            })
-          } 
+              .then(doc => {
+                winner = winner.toUpperCase()
+                Swal.fire(`The Winner is ${winner}`)
+              })
+              .catch(err => {
+                console.log(err)
+              })
+          }
         })
-
     },
     addPlayer ({ commit, state }, payload) {
       alert('add player')
@@ -128,11 +127,11 @@ export default new Vuex.Store({
     },
     updatePosition ({ commit, state }, payload) {
       return db.collection('room').doc(`${payload.room}`).update({
-        [`player${localStorage.player}.option`]: payload.option,
+        [`player${localStorage.player}.option`]: payload.option
       })
-      .then(function(result) {
+        .then(function (result) {
         // console.log(result)
-      })
+        })
     },
     playNow ({ commit, name }, roomlink) {
       db.collection('room').doc(`${roomlink}`).update({
