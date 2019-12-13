@@ -29,18 +29,26 @@
           <i class="fas fa-check"></i>
           ready
         </button>
-        <button type="button" v-if="!playerTwoReady || !playerOneReady" class="btn btn-secondary disabled">PLAY !</button>
-        <button type="button" class="btn btn-success" v-if="playerTwoReady && playerOneReady">PLAY !</button>
+        <button type="button" v-if="!playerTwoReady || !playerOneReady"  class="btn btn-secondary disabled">PLAY !</button>
+        <button type="button" class="btn btn-success" @click.prevent="playNow" v-if="playerTwoReady && playerOneReady">PLAY !</button>
         <div v-if="getUser">
           <button v-if="playerTwoReady" @click="playerReady2" type="button" class="btn ml-3 btn-primary disabled">
             <i class="fas fa-check"></i>
             ready
           </button>
-          <button v-if="!playerTwoReady" @click="playerReady2" type="button" class="btn ml-3 btn-primary">
+          <button v-if="getData.length == 2" v-show="!playerTwoReady" @click="playerReady2" type="button" class="btn ml-3 btn-primary">
             <i class="fas fa-check"></i>
             ready
           </button>
+         
         </div>
+         <!-- {{ $store.state.master}} -->
+          <form v-if="!getUser" @submit.prevent="userJoinRoom()">
+              <b-form-input class="text-center" v-model="newuser" placeholder="Enter your name"></b-form-input>
+              <b-button class="play-btn px-3 py-2 mt-3 btn-lg" type="submit" pill>Go !</b-button>
+          </form>
+
+
       </div>
       <div class="col-4 d-flex justify-content-end">
         <!-- {{ getData.length }} -->
@@ -68,7 +76,8 @@ export default {
       formusername: true,
       newuser: '',
       playerOneReady: false,
-      playerTwoReady: false
+      playerTwoReady: false,
+      playerTwoLogin: false
     }
   },
   computed: {
@@ -122,6 +131,7 @@ export default {
       this.$store.dispatch('fetchUser', this.$route.params.room)
     },
     userJoinRoom () {
+      this.playerTwoLogin = true
       this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })
     },
     playNow () {

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" >
       <b-form-group id="input-group-3" label="Option:" label-for="input-3">
         <b-form-select
           id="input-3"
@@ -10,9 +10,9 @@
       </b-form-group>
       <button @click.prevent="addOption">submit</button>
       <div>
-        <img v-if="this.form.option === 'Rock'" src="@/assets/Rock.gif"/>
-        <img v-if="this.form.option === 'Scissor'" src="@/assets/Scissor.gif"/>
-        <img v-if="this.form.option === 'Paper'" src="@/assets/Paper.gif"/>
+        <img  style="background-color:white" v-if="this.form.option === 'Rock'" src="@/assets/Rock.gif"/>
+        <img  style="background-color:white" v-if="this.form.option === 'Scissor'" src="@/assets/Scissor.gif"/>
+        <img  style="background-color:white" v-if="this.form.option === 'Paper'" src="@/assets/Paper.gif"/>
       </div>
   </div>
 </template>

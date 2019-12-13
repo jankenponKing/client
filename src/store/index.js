@@ -38,6 +38,9 @@ export default new Vuex.Store({
     },
     CHANGE_PLAY_STATUS (state, payload) {
       state.playStatus = payload
+    },
+    MASTER(state){
+      state.master = true
     }
   },
   actions: {
@@ -78,6 +81,7 @@ export default new Vuex.Store({
           localStorage.setItem('player', 1)
           commit('CHANGE_NAME', payload)
           commit('CHANGE_MASTER')
+          commit('MASTER')
           router.push(`/about/${state.linkroom}`)
           console.log('Document written with ID: ', docRef.id)
           Swal.close()
@@ -87,11 +91,9 @@ export default new Vuex.Store({
         })
     },
     fetchUser ({ commit, state }, payload) {
-      alert(payload)
       commit('CHANGE_ROOM', payload)
       db.collection('room').doc(`${payload}`)
         .onSnapshot(function (doc) {
-          alert(doc.data())
           commit('ADD_DATA', doc.data())
           // console.log('data saat ini', doc.data())
         })
@@ -120,7 +122,6 @@ export default new Vuex.Store({
         })
     },
     addPlayer ({ commit, state }, payload) {
-      alert('add player')
       let countPlayer = state.objectData.count + 1
       // commit('CHANGE_COUNT_PLAYER', countPlayer)
       db.collection('room').doc(`${payload.room}`).update({
@@ -150,6 +151,8 @@ export default new Vuex.Store({
         })
     },
     playNow ({ commit, name }, roomlink) {
+      console.log("TCL: playNow -> ${roomlink}", `${roomlink}`)
+      
       db.collection('room').doc(`${roomlink}`).update({
         playStatus: true
       })
