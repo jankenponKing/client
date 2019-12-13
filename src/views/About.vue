@@ -74,7 +74,7 @@ export default {
   computed: {
     getData () {
       const data = Object.values(this.$store.state.objectData)
-      const arr = data.slice(2, data.length)
+      const arr = data.slice(1)
       for (var i = 0; i < arr.length; i++) {
         for (var j = i + 1; j < arr.length; j++) {
           if (arr[j].playerOrder > arr[i].playerOrder) {
@@ -84,14 +84,21 @@ export default {
           }
         }
       }
-      // console.log(arr);
+      console.log(arr)
       return arr
     },
     getTotalPlayer () {
       return this.$store.state.objectData.count
     },
     getUser () {
-      return this.$store.state.player2
+      return this.$store.state.username
+    },
+    startGame () {
+      return this.$store.state.objectData.playStatus
+    },
+    getMaster () {
+      if (localStorage.player == 1) return true
+      else return false
     }
     // startGame () {
     //   return this.$store.state.objectData.playStatus
@@ -112,7 +119,7 @@ export default {
       this.playerTwoReady ? this.playerTwoReady = false : this.playerTwoReady = true
     },
     fetchData () {
-      this.$store.dispatch('fetchData', this.$route.params.room)
+      this.$store.dispatch('fetchUser', this.$route.params.room)
     },
     userJoinRoom () {
       this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })
