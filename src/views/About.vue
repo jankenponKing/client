@@ -1,40 +1,115 @@
 <template>
-  <div class="about">
-    <h1>This is an about page</h1>
+  <b-container class="pb-3">
+    <b-row>
+      <b-col>
+        <h1 class="welcome-title">Welcome to join with {{ getTotalPlayer }} other players in this room!</h1>
+      </b-col>
+    </b-row>
 
-    <label>Player 1</label>
-    <input v-model="player1">
-    <br>
-    <label>Player 2</label>
-    <input v-model="player2">
-    <br>
-    <button @click="getWinner">Play</button>
-    <label>Winner</label>
-    <input v-model="winner">
-  </div>
+    <b-row v-if="!getUser" class="justify-content-center my-4">
+      <b-col cols="7">
+
+      <form @submit.prevent="userJoinRoom">
+        <b-input-group>
+          <b-form-input v-model="newuser" placeholder="Enter your name" type="text"></b-form-input>
+          <b-input-group-append>
+            <b-button type="submit" variant="outline-secondary">Button</b-button>
+          </b-input-group-append>
+        </b-input-group>
+      </form>
+
+      </b-col>
+    </b-row>
+
+    <b-row>
+      <b-col>
+        <b-button v-if="getMaster" @click="playNow" class="btn-lg my-3" variant="success">PLAY!</b-button>
+      </b-col>
+    </b-row>
+
+    <b-row class="justify-content-center mt-4">
+      <b-col cols="6">
+        <div v-for="(data,key) in getData" :key="key">
+          <b-card v-if="data.username" class="text-center background-color-XXX mb-2">
+            <div class="text-white" style="font-size: 30px;">
+              {{ data.username }}
+            </div>
+          </b-card>
+        </div>
+      </b-col>
+    </b-row>
+
+  </b-container>
 </template>
 
 <script>
 export default {
-  data: function () {
+  data () {
     return {
-      player1: '',
-      player2: '',
-      winner: ''
+      formusername: true,
+      newuser: ''
+    }
+  },
+  computed: {
+    getData () {
+      const data = Object.values(this.$store.state.objectData)
+      const arr = data.slice(2, data.length - 1)
+      for (var i = 0; i < arr.length; i++) {
+        for (var j = i + 1; j < arr.length; j++) {
+          if (arr[j].playerOrder > arr[i].playerOrder) {
+            var tampung = arr[i]
+            arr[i] = arr[j]
+            arr[j] = tampung
+          }
+        }
+      }
+      return arr
+    },
+    getTotalPlayer () {
+      return this.$store.state.objectData.count
+    },
+    getUser () {
+      return this.$store.state.username
+    },
+    startGame () {
+      return this.$store.state.objectData.playStatus
+    },
+    getMaster () {
+      return this.$store.state.master
+    }
+  },
+  watch: {
+    startGame (value) {
+      if (value) {
+        this.$router.push({ path: `/game/${this.$route.params.room}` })
+      }
     }
   },
   methods: {
-    getWinner () {
-      if (this.player1 === 'batu' && this.player2 === 'gunting') this.winner = 'Player 1'
-      else if (this.player1 === 'gunting' && this.player2 === 'kertas') this.winner = 'Player 1'
-      else if (this.player1 === 'kertas' && this.player2 === 'batu') this.winner = 'Player 1'
-      else if (this.player1 === this.player2) this.winner = 'Match'
-      else this.winner = 'Player 2'
+    fetchData () {
+      this.$store.dispatch('fetchData', this.$route.params.room)
+    },
+    userJoinRoom () {
+      this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })
+    },
+    playNow () {
+      this.$store.dispatch('playNow', this.$route.params.room)
     }
+  },
+  created () {
+    this.fetchData()
   }
 }
 </script>
 
-<style>
+<style scoped>
+  @import url('https://fonts.googleapis.com/css?family=Abril+Fatface&display=swap');
+  @import url('https://fonts.googleapis.com/css?family=Quicksand&display=swap');
 
+  .welcome-title{
+    font-family: 'Quicksand', sans-serif;
+  }
+  .background-color-XXX{
+    background-color: #62B69B;
+  }
 </style>
