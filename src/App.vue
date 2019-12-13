@@ -3,7 +3,7 @@
     <div id="nav">
       <h1>Gunting Batu Kertas</h1>
       <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/joinRoom">Join Room</router-link>
     </div>
     <router-view/>
   </div>
