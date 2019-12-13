@@ -20,6 +20,7 @@ export default {
     createRoom () {
       this.$store.dispatch('createRoom', this.player)
     }
+    
   }
 }
 </script>
