@@ -53,7 +53,7 @@ export default {
   computed: {
     getData () {
       const data = Object.values(this.$store.state.objectData)
-      const arr = data.slice(2, data.length - 1)
+      const arr = data.slice(1)
       for (var i = 0; i < arr.length; i++) {
         for (var j = i + 1; j < arr.length; j++) {
           if (arr[j].playerOrder > arr[i].playerOrder) {
@@ -63,6 +63,7 @@ export default {
           }
         }
       }
+      console.log(arr)
       return arr
     },
     getTotalPlayer () {
@@ -75,7 +76,8 @@ export default {
       return this.$store.state.objectData.playStatus
     },
     getMaster () {
-      return this.$store.state.master
+      if (localStorage.player == 1) return true
+      else return false
     }
   },
   watch: {
@@ -87,7 +89,7 @@ export default {
   },
   methods: {
     fetchData () {
-      this.$store.dispatch('fetchData', this.$route.params.room)
+      this.$store.dispatch('fetchUser', this.$route.params.room)
     },
     userJoinRoom () {
       this.$store.dispatch('addPlayer', { room: this.$route.params.room, newuser: this.newuser })

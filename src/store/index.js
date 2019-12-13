@@ -20,6 +20,7 @@ export default new Vuex.Store({
   },
   mutations: {
     ADD_DATA (state, payload) {
+      console.log(payload)
       state.objectData = payload
     },
     CHANGE_NAME (state, payload) {
@@ -40,7 +41,6 @@ export default new Vuex.Store({
   },
   actions: {
     create ({ commit, state }, payload) {
-      const index = Math.round(Math.random() * texts.length)
       Swal.fire({
         imageUrl: 'https://static-steelkiwi-dev.s3.amazonaws.com/media/filer_public/4e/07/4e07eece-7c84-46e2-944d-1a6b856d7b5f/463ff844-6f36-4ffe-b051-fea983d39223.gif',
         text: 'Creating your room...',
@@ -55,13 +55,12 @@ export default new Vuex.Store({
             username: payload,
             option: ''
           },
-          text: texts[index].text,
-          playStatus: false
         }
       )
         .then((docRef) => {
           commit('CHANGE_ROOM', docRef.id)
           commit('CHANGE_COUNT_PLAYER', 1)
+          localStorage.setItem('player', 1)
           commit('CHANGE_NAME', payload)
           commit('CHANGE_MASTER')
           router.push(`/about/${state.linkroom}`)
@@ -72,26 +71,54 @@ export default new Vuex.Store({
           console.error('Error adding document: ', error)
         })
     },
-    fetchData ({ commit, state }, payload) {
+    fetchUser({commit, state}, payload) {
+     alert( payload)
       commit('CHANGE_ROOM', payload)
       db.collection('room').doc(`${payload}`)
         .onSnapshot(function (doc) {
+          alert(doc.data())
           commit('ADD_DATA', doc.data())
           // console.log('data saat ini', doc.data())
         })
     },
+    fetchData ({ commit, state }, payload) {
+      // commit('CHANGE_ROOM', payload)
+      db.collection('room').doc(`${payload}`)
+        .onSnapshot(function (doc) {
+          console.log(doc.data())
+          if (doc.data().player1.option && doc.data().player2.option) {
+            let winner = ''
+            if (doc.data().player1.option == 'scissor' && doc.data().player2.option == 'paper') winner = doc.data().player1.username 
+            else if (doc.data().player1.option == 'paper' && doc.data().player2.option == 'rock') winner = doc.data().player1.username 
+            else if (doc.data().player1.option == 'rock' && doc.data().player2.option == 'scissor') winner = doc.data().player1.username 
+            else if (doc.data().player1.option == doc.data().player2.option) winner = 'Draw'
+            else winner = doc.data().player2.username 
+            db.collection('room').doc(`${payload}`).update({ winner })
+            .then(doc => {
+              winner = winner.toUpperCase()
+              Swal.fire(`The Winner is ${winner}`)
+            })
+            .catch(err => {
+              console.log(err)
+            })
+          } 
+        })
+
+    },
     addPlayer ({ commit, state }, payload) {
+      alert('add player')
       let countPlayer = state.objectData.count + 1
-      commit('CHANGE_COUNT_PLAYER', countPlayer)
+      // commit('CHANGE_COUNT_PLAYER', countPlayer)
       db.collection('room').doc(`${payload.room}`).update({
         [`player${countPlayer}`]: {
           username: payload.newuser,
           option: ''
         },
-        count: state.objectData.count + 1
+        count: 2
       })
         .then(function () {
           commit('CHANGE_NAME', payload.newuser)
+          localStorage.setItem('player', 2)
           console.log()
           console.log('Document successfully written!')
         })
@@ -101,9 +128,10 @@ export default new Vuex.Store({
     },
     updatePosition ({ commit, state }, payload) {
       return db.collection('room').doc(`${payload.room}`).update({
-        [`player${state.countPlayer}.position`]: payload.position,
-        [`player${state.countPlayer}.wpm`]: payload.wpm,
-        [`player${state.countPlayer}.username`]: state.username
+        [`player${localStorage.player}.option`]: payload.option,
+      })
+      .then(function(result) {
+        // console.log(result)
       })
     },
     playNow ({ commit, name }, roomlink) {
